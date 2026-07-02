@@ -9,11 +9,22 @@ You can also include images in this folder and reference them in the markdown. E
 
 ## How it works
 
-Explain how your project works
+# How it works
+
+The SmartSense Energy Management System monitors occupancy using PIR and IR sensors. A finite state machine determines room occupancy and controls appliance relays accordingly. Energy consumption is accumulated over time for both smart and conventional operation to estimate energy savings.
 
 ## How to test
 
-Explain how to use your project
+# How to test
+
+1. Apply a clock and reset.
+2. Drive ui_in[0] to simulate the PIR sensor.
+3. Drive ui_in[1] to simulate the IR sensor.
+4. Observe:
+   - uo_out[0] = Light relay
+   - uo_out[1] = Fan relay
+   - uo_out[2] = AC relay
+   - uo_out[4:3] = FSM state
 
 ## External hardware
 

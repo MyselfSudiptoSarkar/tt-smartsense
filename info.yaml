@@ -1,9 +1,9 @@
 # Tiny Tapeout project information
 project:
-  title: ""
-  author: ""
+  title: "SmartSense Energy Management System"
+  author: "Sudipto Sarkar"
   discord: ""
-  description: ""
+  description: "Occupancy-based smart energy management controller"
   language: "Verilog"
   clock_hz: 0
   tiles: "1x1"
@@ -20,10 +20,10 @@ project:
 
 # The pinout of your project. Leave unused pins blank. DO NOT delete or add any pins.
 # This section is for the datasheet/website. Use descriptive names (e.g., RX, TX, MOSI, SCL, SEG_A, etc.).
+
 pinout:
-  # Inputs
-  ui[0]: ""
-  ui[1]: ""
+  ui[0]: "PIR Sensor"
+  ui[1]: "IR Sensor"
   ui[2]: ""
   ui[3]: ""
   ui[4]: ""
@@ -31,17 +31,15 @@ pinout:
   ui[6]: ""
   ui[7]: ""
 
-  # Outputs
-  uo[0]: ""
-  uo[1]: ""
-  uo[2]: ""
-  uo[3]: ""
-  uo[4]: ""
+  uo[0]: "Light Relay"
+  uo[1]: "Fan Relay"
+  uo[2]: "AC Relay"
+  uo[3]: "FSM State Bit0"
+  uo[4]: "FSM State Bit1"
   uo[5]: ""
   uo[6]: ""
   uo[7]: ""
 
-  # Bidirectional pins
   uio[0]: ""
   uio[1]: ""
   uio[2]: ""
