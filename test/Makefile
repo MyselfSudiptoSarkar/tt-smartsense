@@ -14,6 +14,17 @@ energy_calculator.v \
 smartsense_core.v \
 tt_um_smartsense.v
 
+# Make GATES visible to the cocotb Python process (test.py) so it can tell
+# RTL simulation (fast, SIM-scaled timing) apart from gate-level simulation
+# (production timing frozen in from hardening - see design note in test.py).
+export GATES
+
+# -DSIM is applied unconditionally: it only controls simulation-only timing
+# scaling inside tt_um_smartsense.v (see that file), which does not exist
+# in a gate-level netlist at all, so it is harmless here and required for
+# RTL simulation to complete in a sane amount of time.
+COMPILE_ARGS += -DSIM
+
 ifneq ($(GATES),yes)
 
 # RTL simulation:
@@ -26,7 +37,6 @@ else
 SIM_BUILD				= sim_build/gl
 COMPILE_ARGS    += -DGL_TEST
 COMPILE_ARGS    += -DFUNCTIONAL
-COMPILE_ARGS    += -DSIM
 VERILOG_SOURCES += $(PDK_ROOT)/ihp-sg13g2/libs.ref/sg13g2_io/verilog/sg13g2_io.v
 VERILOG_SOURCES += $(PDK_ROOT)/ihp-sg13g2/libs.ref/sg13g2_stdcell/verilog/sg13g2_stdcell.v
 

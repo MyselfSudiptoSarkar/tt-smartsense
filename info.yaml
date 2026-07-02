@@ -24,12 +24,12 @@ project:
 pinout:
   ui[0]: "PIR Sensor"
   ui[1]: "IR Sensor"
-  ui[2]: ""
-  ui[3]: ""
-  ui[4]: ""
-  ui[5]: ""
-  ui[6]: ""
-  ui[7]: ""
+  ui[2]: "Reserved"
+  ui[3]: "Debug select bit0"
+  ui[4]: "Debug select bit1"
+  ui[5]: "Debug select bit2"
+  ui[6]: "Debug select bit3"
+  ui[7]: "Debug select bit4"
 
   uo[0]: "Light Relay"
   uo[1]: "Fan Relay"
@@ -40,14 +40,14 @@ pinout:
   uo[6]: ""
   uo[7]: ""
 
-  uio[0]: ""
-  uio[1]: ""
-  uio[2]: ""
-  uio[3]: ""
-  uio[4]: ""
-  uio[5]: ""
-  uio[6]: ""
-  uio[7]: ""
+  uio[0]: "Debug data bit0"
+  uio[1]: "Debug data bit1"
+  uio[2]: "Debug data bit2"
+  uio[3]: "Debug data bit3"
+  uio[4]: "Debug data bit4"
+  uio[5]: "Debug data bit5"
+  uio[6]: "Debug data bit6"
+  uio[7]: "Debug data bit7"
 
 # Do not change!
 yaml_version: 6

@@ -25,6 +25,14 @@ The SmartSense Energy Management System monitors occupancy using PIR and IR sens
    - uo_out[1] = Fan relay
    - uo_out[2] = AC relay
    - uo_out[4:3] = FSM state
+5. To read the cumulative energy accumulators (E_smart, E_conv, E_savings,
+   each 48-bit, in milli-watt-hours), drive ui_in[7:3] with a value from
+   0 to 17 and read the selected byte back on uio_out:
+   - select 0-5   -> E_smart_mWh,   byte 0 (LSB) to byte 5 (MSB)
+   - select 6-11  -> E_conv_mWh,    byte 0 (LSB) to byte 5 (MSB)
+   - select 12-17 -> E_savings_mWh, byte 0 (LSB) to byte 5 (MSB)
+
+   ui_in[2] is reserved and should be driven to 0.
 
 ## External hardware
 
