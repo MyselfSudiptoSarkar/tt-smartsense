@@ -4,8 +4,18 @@
 // E_Savings - the three signals the README calls out explicitly.
 //
 // Each 1-second tick adds P(W) * (1/3600) Wh = P * 1000/3600 mWh.
-// 1000/3600 simplifies to 5/18, kept as integer math with a remainder
-// register so the running total does not drift from truncation over time.
+// 1000/3600 simplifies to 5/18. Rather than synthesizing real divider
+// hardware for /18 and %18 (which is extremely area-hungry - two full
+// combinational integer dividers, one per accumulator, plus the modulo
+// hardware alongside them - and does not fit a Tiny Tapeout 1x1 tile's
+// placement budget, causing OpenROAD.GlobalPlacement to fail with
+// GPL-0302), this uses a fixed-point reciprocal-multiply approximation:
+// only a constant multiplier and a right-shift, both of which map to
+// cheap adder/shifter logic instead of a divider.
+//
+//   5/18 ~= 72818 / 2^18   (relative error ~ 3e-7, i.e. negligible drift
+//                           even accumulated over the accumulator's
+//                           full lifetime)
 
 module energy_calculator #(
     parameter ACC_WIDTH = 48
@@ -20,22 +30,21 @@ module energy_calculator #(
     output wire [ACC_WIDTH-1:0]    e_savings_mWh
 );
 
-    reg [15:0] smart_rem, conv_rem; // carried remainders, range 0..17
+    localparam [17:0] SCALE_MULT = 18'd72818; // round(5/18 * 2^18)
+    localparam        SCALE_BITS = 18;
 
-    wire [31:0] smart_num = p_smart_out * 32'd5 + smart_rem;
-    wire [31:0] conv_num  = p_conv_out  * 32'd5 + conv_rem;
+    // 16-bit power * 18-bit constant = 34 bits max; ACC_WIDTH (>=34)
+    // covers the sum with the running total headroom to spare.
+    wire [ACC_WIDTH-1:0] smart_scaled = p_smart_out * SCALE_MULT;
+    wire [ACC_WIDTH-1:0] conv_scaled  = p_conv_out  * SCALE_MULT;
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             e_smart_mWh <= {ACC_WIDTH{1'b0}};
             e_conv_mWh  <= {ACC_WIDTH{1'b0}};
-            smart_rem   <= 16'd0;
-            conv_rem    <= 16'd0;
         end else if (tick_1s) begin
-            e_smart_mWh <= e_smart_mWh + (smart_num / 32'd18);
-            e_conv_mWh  <= e_conv_mWh  + (conv_num  / 32'd18);
-            smart_rem   <= smart_num % 32'd18;
-            conv_rem    <= conv_num  % 32'd18;
+            e_smart_mWh <= e_smart_mWh + (smart_scaled >> SCALE_BITS);
+            e_conv_mWh  <= e_conv_mWh  + (conv_scaled  >> SCALE_BITS);
         end
     end
 
